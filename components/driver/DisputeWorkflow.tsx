@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ChevronLeft, CheckCircle } from 'lucide-react';
 import { DISPUTE_REASONS } from '@/lib/mockData';
 
@@ -29,27 +30,30 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
   const selectedReasonData = DISPUTE_REASONS.find(r => r.code === selectedReason);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" style={{ backgroundColor: '#FFFFFF' }}>
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 bg-[#0F172A] sticky top-0 z-10 border-b border-slate-800">
+      <div
+        className="px-4 pt-4 pb-3 sticky top-0 z-10 border-b"
+        style={{ backgroundColor: '#FFFFFF', borderColor: '#D6DBE1' }}
+      >
         {step < 3 && (
           <button
             onClick={step === 1 ? onBack : () => setStep(1)}
-            className="flex items-center gap-1 text-slate-400 hover:text-slate-200 text-sm mb-2 transition-colors"
+            className="flex items-center gap-1 text-sm mb-2 transition-colors"
+            style={{ color: '#0369EA' }}
           >
             <ChevronLeft className="w-4 h-4" />
             {step === 1 ? eventLabel : 'Back'}
           </button>
         )}
-        {/* Step indicator */}
+        {/* Step progress bar */}
         {step < 3 && (
           <div className="flex items-center gap-2">
             {[1, 2].map(s => (
               <div
                 key={s}
-                className={`h-1 rounded-full flex-1 transition-all duration-300 ${
-                  s <= step ? 'bg-blue-500' : 'bg-slate-700'
-                }`}
+                className="h-1 rounded-full flex-1 transition-all duration-300"
+                style={{ backgroundColor: s <= step ? '#0369EA' : '#E5E7EB' }}
               />
             ))}
           </div>
@@ -60,8 +64,8 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
         {/* Step 1 — Pick reason */}
         {step === 1 && (
           <div className="px-4 py-4">
-            <h2 className="text-lg font-bold text-white mb-1">What really happened?</h2>
-            <p className="text-sm text-slate-400 mb-5">
+            <h2 className="text-lg font-bold mb-1" style={{ color: '#00263E' }}>What really happened?</h2>
+            <p className="text-sm mb-5" style={{ color: '#6B7280' }}>
               Select the reason that best describes the situation at the time of the flag.
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -69,10 +73,19 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
                 <button
                   key={reason.code}
                   onClick={() => handleSelectReason(reason.code)}
-                  className="bg-[#1E293B] border border-slate-700 hover:border-blue-500/50 hover:bg-blue-500/5 rounded-xl p-3.5 text-left flex flex-col gap-1.5 transition-all duration-150"
+                  className="rounded-xl p-3.5 text-left flex flex-col gap-1.5 transition-all duration-150"
+                  style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1' }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = '#0369EA';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = '#F0F6FE';
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLElement).style.borderColor = '#D6DBE1';
+                    (e.currentTarget as HTMLElement).style.backgroundColor = '#FFFFFF';
+                  }}
                 >
-                  <span className="text-sm font-semibold text-white">{reason.label}</span>
-                  <span className="text-xs text-slate-500 leading-relaxed">{reason.description}</span>
+                  <span className="text-sm font-semibold" style={{ color: '#333333' }}>{reason.label}</span>
+                  <span className="text-xs leading-relaxed" style={{ color: '#6B7280' }}>{reason.description}</span>
                 </button>
               ))}
             </div>
@@ -82,18 +95,21 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
         {/* Step 2 — Add note */}
         {step === 2 && (
           <div className="px-4 py-4">
-            <h2 className="text-lg font-bold text-white mb-1">Add any details?</h2>
-            <p className="text-sm text-slate-400 mb-5">
+            <h2 className="text-lg font-bold mb-1" style={{ color: '#00263E' }}>Add any details?</h2>
+            <p className="text-sm mb-5" style={{ color: '#6B7280' }}>
               Optional — a brief note helps your manager make an informed decision.
             </p>
 
             {/* Selected reason chip */}
             {selectedReasonData && (
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg px-3 py-2 mb-4">
-                <p className="text-xs text-blue-400 font-medium">
+              <div
+                className="rounded-lg px-3 py-2 mb-4"
+                style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}
+              >
+                <p className="text-xs font-medium" style={{ color: '#1D4ED8' }}>
                   Selected reason: {selectedReasonData.label}
                 </p>
-                <p className="text-xs text-slate-400">{selectedReasonData.description}</p>
+                <p className="text-xs" style={{ color: '#6B7280' }}>{selectedReasonData.description}</p>
               </div>
             )}
 
@@ -102,13 +118,21 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
               onChange={e => setNote(e.target.value)}
               placeholder="e.g. I was adjusting the heat — the truck HVAC button is near the center console..."
               rows={4}
-              className="w-full bg-[#1E293B] border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-600 resize-none outline-none transition-colors"
+              className="w-full rounded-xl px-4 py-3 text-sm resize-none outline-none transition-colors"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #D6DBE1',
+                color: '#333333',
+              }}
+              onFocus={e => { (e.currentTarget as HTMLElement).style.borderColor = '#0369EA'; }}
+              onBlur={e => { (e.currentTarget as HTMLElement).style.borderColor = '#D6DBE1'; }}
             />
-            <p className="text-xs text-slate-600 mt-1.5 mb-5">{note.length}/500 characters</p>
+            <p className="text-xs mt-1.5 mb-5" style={{ color: '#6B7280' }}>{note.length}/500 characters</p>
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
+              className="w-full text-white font-semibold py-3.5 rounded-xl transition-all duration-200 text-sm"
+              style={{ backgroundColor: '#0369EA' }}
             >
               Submit Dispute
             </button>
@@ -118,26 +142,36 @@ export default function DisputeWorkflow({ eventLabel, onBack, onSubmit }: Props)
         {/* Step 3 — Confirmation */}
         {step === 3 && (
           <div className="px-4 py-12 flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 animate-pulse">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center mb-4 animate-pulse"
+              style={{ backgroundColor: '#DCFCE7' }}
+            >
+              <CheckCircle className="w-8 h-8" style={{ color: '#16A34A' }} />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Dispute Submitted!</h2>
-            <p className="text-sm text-slate-400 leading-relaxed mb-2 max-w-xs">
+            <h2 className="text-xl font-bold mb-2" style={{ color: '#00263E' }}>Dispute Submitted!</h2>
+            <p className="text-sm leading-relaxed mb-2 max-w-xs" style={{ color: '#6B7280' }}>
               Your dispute has been sent to your fleet manager.
             </p>
-            <p className="text-sm text-slate-500 mb-8">
-              Expected review: <span className="text-slate-300">within 24 hours</span>
+            <p className="text-sm mb-8" style={{ color: '#6B7280' }}>
+              Expected review: <span style={{ color: '#333333' }}>within 24 hours</span>
             </p>
-            <div className="bg-[#1E293B] border border-slate-700 rounded-xl p-4 w-full text-left mb-6">
-              <p className="text-xs text-slate-500 mb-1 uppercase tracking-wider">You submitted</p>
+            <div
+              className="rounded-xl p-4 w-full text-left mb-6"
+              style={{ backgroundColor: '#F0F6FE', border: '1px solid #BFDBFE' }}
+            >
+              <p className="text-xs mb-1 uppercase tracking-wider" style={{ color: '#6B7280' }}>You submitted</p>
               {selectedReasonData && (
-                <p className="text-sm font-semibold text-white mb-1">{selectedReasonData.label}</p>
+                <p className="text-sm font-semibold mb-1" style={{ color: '#00263E' }}>{selectedReasonData.label}</p>
               )}
-              {note && <p className="text-xs text-slate-400">&ldquo;{note}&rdquo;</p>}
+              {note && <p className="text-xs" style={{ color: '#6B7280' }}>&ldquo;{note}&rdquo;</p>}
             </div>
-            <p className="text-xs text-slate-500 text-center px-2">
-              Switch to the <span className="text-blue-400">Manager Dashboard</span> to see this dispute in the review queue
-            </p>
+            <Link
+              href="/manager"
+              className="text-sm font-semibold underline underline-offset-2 transition-colors"
+              style={{ color: '#0369EA' }}
+            >
+              → Switch to Manager Dashboard to review this dispute
+            </Link>
           </div>
         )}
       </div>

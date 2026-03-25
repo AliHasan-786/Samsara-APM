@@ -10,11 +10,11 @@ import {
 import { CheckCircle, AlertTriangle, TrendingUp, DollarSign, Users } from 'lucide-react';
 
 const COLORS = {
-  approved: '#22C55E',
-  rejected: '#EF4444',
-  pending: '#F59E0B',
-  blue: '#3B82F6',
-  indigo: '#6366F1',
+  approved: '#0DAB41',
+  rejected: '#DF2036',
+  pending: '#FBB924',
+  blue: '#0369EA',
+  teal: '#1DCAD3',
 };
 
 // 7 days of mock chart data
@@ -38,11 +38,14 @@ const confidenceData = [
   { bucket: '90-100%', count: 2 },
 ];
 
-const CustomTooltipDark = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
+const CustomTooltipLight = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#1E293B] border border-slate-700 rounded-lg p-3 text-xs shadow-xl">
-        <p className="text-slate-300 font-semibold mb-1">{label}</p>
+      <div
+        className="rounded-lg p-3 text-xs shadow-xl"
+        style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1' }}
+      >
+        <p className="font-semibold mb-1" style={{ color: '#333333' }}>{label}</p>
         {payload.map((p, i) => (
           <p key={i} style={{ color: p.color }}>{p.name}: {p.value}</p>
         ))}
@@ -73,60 +76,72 @@ export default function AnalyticsPage() {
     name: DISPUTE_REASONS.find(r => r.code === code)?.label ?? code,
     value: count,
   }));
-  const PIE_COLORS = ['#3B82F6', '#6366F1', '#F59E0B', '#22C55E', '#EF4444', '#8B5CF6'];
+  const PIE_COLORS = ['#0369EA', '#1DCAD3', '#FBB924', '#0DAB41', '#DF2036', '#6366F1'];
 
   const kpis = [
     {
       label: 'False Positives Prevented',
       value: approvedCount,
       icon: CheckCircle,
-      color: 'text-green-400',
-      bg: 'bg-green-500/10 border-green-500/20',
+      iconColor: '#0DAB41',
+      bg: '#ECFDF5',
+      border: '#0DAB41',
+      valueColor: '#065F46',
       sub: 'Approved disputes',
     },
     {
       label: 'Total Disputes Filed',
       value: totalDisputed,
       icon: AlertTriangle,
-      color: 'text-amber-400',
-      bg: 'bg-amber-500/10 border-amber-500/20',
+      iconColor: '#B45309',
+      bg: '#FFF8E7',
+      border: '#FBB924',
+      valueColor: '#B45309',
       sub: `${pendingCount} pending`,
     },
     {
       label: 'Approval Rate',
       value: `${approvalRate}%`,
       icon: TrendingUp,
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10 border-blue-500/20',
+      iconColor: '#0369EA',
+      bg: '#EFF6FF',
+      border: '#0369EA',
+      valueColor: '#0369EA',
       sub: `${rejectedCount} sent to coaching`,
     },
     {
       label: 'Driver Retention Value',
       value: `$${(40000 + retentionValue).toLocaleString()}`,
       icon: DollarSign,
-      color: 'text-indigo-400',
-      bg: 'bg-indigo-500/10 border-indigo-500/20',
+      iconColor: '#1DCAD3',
+      bg: '#F0FFFE',
+      border: '#1DCAD3',
+      valueColor: '#0369EA',
       sub: 'Estimated annual savings',
     },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8" style={{ backgroundColor: '#F0F6FE', minHeight: '100vh' }}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-1">Trust Impact Analytics</h1>
-        <p className="text-slate-400 text-sm">How TrustLoop is improving data quality and driver retention</p>
+        <h1 className="text-2xl font-bold mb-1" style={{ color: '#00263E' }}>Trust Impact Analytics</h1>
+        <p className="text-sm" style={{ color: '#6B7280' }}>How TrustLoop is improving data quality and driver retention</p>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {kpis.map((kpi, i) => (
-          <div key={i} className={`rounded-xl border ${kpi.bg} p-5`}>
+          <div
+            key={i}
+            className="rounded-xl p-5"
+            style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1', boxShadow: '0 1px 4px rgba(0,0,0,0.06)' }}
+          >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">{kpi.label}</span>
-              <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
+              <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#6B7280' }}>{kpi.label}</span>
+              <kpi.icon className="w-4 h-4" style={{ color: kpi.iconColor }} />
             </div>
-            <p className={`text-3xl font-bold ${kpi.color} mb-1`}>{kpi.value}</p>
-            <p className="text-xs text-slate-500">{kpi.sub}</p>
+            <p className="text-3xl font-bold mb-1" style={{ color: kpi.valueColor }}>{kpi.value}</p>
+            <p className="text-xs" style={{ color: '#6B7280' }}>{kpi.sub}</p>
           </div>
         ))}
       </div>
@@ -134,16 +149,19 @@ export default function AnalyticsPage() {
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Bar chart */}
-        <div className="lg:col-span-2 bg-[#1E293B] border border-slate-700 rounded-xl p-5">
-          <h2 className="font-bold text-white mb-1 text-base">Dispute Outcomes Over Time</h2>
-          <p className="text-xs text-slate-500 mb-4">7-day history of dispute resolutions</p>
+        <div
+          className="lg:col-span-2 rounded-xl p-5"
+          style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1', borderRadius: '12px' }}
+        >
+          <h2 className="font-bold mb-1 text-base" style={{ color: '#00263E' }}>Dispute Outcomes Over Time</h2>
+          <p className="text-xs mb-4" style={{ color: '#6B7280' }}>7-day history of dispute resolutions</p>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={dailyData} barGap={2}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="day" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<CustomTooltipDark />} />
-              <Legend wrapperStyle={{ fontSize: 12, color: '#94A3B8' }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+              <XAxis dataKey="day" tick={{ fill: '#6B7280', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#6B7280', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltipLight />} />
+              <Legend wrapperStyle={{ fontSize: 12, color: '#6B7280' }} />
               <Bar dataKey="approved" fill={COLORS.approved} name="Approved" radius={[3,3,0,0]} />
               <Bar dataKey="rejected" fill={COLORS.rejected} name="Rejected" radius={[3,3,0,0]} />
               <Bar dataKey="pending" fill={COLORS.pending} name="Pending" radius={[3,3,0,0]} />
@@ -152,9 +170,12 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Pie chart */}
-        <div className="bg-[#1E293B] border border-slate-700 rounded-xl p-5">
-          <h2 className="font-bold text-white mb-1 text-base">Dispute Reasons</h2>
-          <p className="text-xs text-slate-500 mb-4">Breakdown by driver-reported cause</p>
+        <div
+          className="rounded-xl p-5"
+          style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1', borderRadius: '12px' }}
+        >
+          <h2 className="font-bold mb-1 text-base" style={{ color: '#00263E' }}>Dispute Reasons</h2>
+          <p className="text-xs mb-4" style={{ color: '#6B7280' }}>Breakdown by driver-reported cause</p>
           {pieData.length > 0 ? (
             <>
               <ResponsiveContainer width="100%" height={160}>
@@ -172,7 +193,7 @@ export default function AnalyticsPage() {
                       <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip content={<CustomTooltipDark />} />
+                  <Tooltip content={<CustomTooltipLight />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-1.5 mt-2">
@@ -180,15 +201,15 @@ export default function AnalyticsPage() {
                   <div key={i} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
-                      <span className="text-slate-400">{item.name}</span>
+                      <span style={{ color: '#6B7280' }}>{item.name}</span>
                     </div>
-                    <span className="text-slate-300 font-medium">{item.value}</span>
+                    <span className="font-medium" style={{ color: '#333333' }}>{item.value}</span>
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-40 text-slate-600 text-sm">
+            <div className="flex items-center justify-center h-40 text-sm" style={{ color: '#6B7280' }}>
               No disputes filed yet
             </div>
           )}
@@ -196,23 +217,26 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Line chart — confidence distribution */}
-      <div className="bg-[#1E293B] border border-slate-700 rounded-xl p-5 mb-8">
-        <h2 className="font-bold text-white mb-1 text-base">AI Confidence Score Distribution</h2>
-        <p className="text-xs text-slate-500 mb-4">
+      <div
+        className="rounded-xl p-5 mb-8"
+        style={{ backgroundColor: '#FFFFFF', border: '1px solid #D6DBE1', borderRadius: '12px' }}
+      >
+        <h2 className="font-bold mb-1 text-base" style={{ color: '#00263E' }}>AI Confidence Score Distribution</h2>
+        <p className="text-xs mb-4" style={{ color: '#6B7280' }}>
           Disputed events cluster in the 40–75% &ldquo;gray zone&rdquo; — where AI is uncertain and drivers are most likely to be falsely flagged
         </p>
         <ResponsiveContainer width="100%" height={200}>
           <LineChart data={confidenceData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis dataKey="bucket" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} label={{ value: 'Events', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11 }} />
-            <Tooltip content={<CustomTooltipDark />} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+            <XAxis dataKey="bucket" tick={{ fill: '#6B7280', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: '#6B7280', fontSize: 11 }} axisLine={false} tickLine={false} label={{ value: 'Events', angle: -90, position: 'insideLeft', fill: '#6B7280', fontSize: 11 }} />
+            <Tooltip content={<CustomTooltipLight />} />
             <Line
               type="monotone"
               dataKey="count"
-              stroke={COLORS.indigo}
+              stroke={COLORS.blue}
               strokeWidth={2.5}
-              dot={{ fill: COLORS.indigo, r: 4 }}
+              dot={{ fill: COLORS.blue, r: 4 }}
               name="Event Count"
             />
           </LineChart>
@@ -220,20 +244,20 @@ export default function AnalyticsPage() {
       </div>
 
       {/* ROI Summary Card */}
-      <div className="bg-[#1E293B] border border-slate-700 rounded-xl overflow-hidden">
-        <div className="p-5 border-b border-slate-700 flex items-center gap-3">
-          <Users className="w-5 h-5 text-green-400" />
+      <div className="rounded-xl overflow-hidden" style={{ backgroundColor: '#00263E', borderRadius: '12px' }}>
+        <div className="p-5 border-b flex items-center gap-3" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+          <Users className="w-5 h-5" style={{ color: '#1DCAD3' }} />
           <h2 className="font-bold text-white text-base">ROI Summary — 500-Driver Fleet</h2>
         </div>
-        <div className="p-5 font-mono text-sm space-y-1.5 text-slate-300">
+        <div className="p-5 font-mono text-sm space-y-1.5" style={{ color: '#A0CFFF' }}>
           <p>Fleet: <span className="text-white">500 drivers</span> | Turnover rate: <span className="text-white">90%</span> | Annual departures: <span className="text-white">450</span></p>
-          <p>If TrustLoop prevents 1% turnover reduction: <span className="text-green-400">5 drivers retained</span></p>
-          <p>Value per driver: <span className="text-white">$8,000</span> | Total saved: <span className="text-green-400">$40,000/year</span></p>
-          <p>Manager review time saved: <span className="text-white">52 hrs × $50/hr</span> = <span className="text-green-400">$2,600/year</span></p>
-          <div className="border-t border-slate-600 pt-2 mt-2">
+          <p>If TrustLoop prevents 1% turnover reduction: <span style={{ color: '#0DAB41' }}>5 drivers retained</span></p>
+          <p>Value per driver: <span className="text-white">$8,000</span> | Total saved: <span style={{ color: '#0DAB41' }}>$40,000/year</span></p>
+          <p>Manager review time saved: <span className="text-white">52 hrs × $50/hr</span> = <span style={{ color: '#0DAB41' }}>$2,600/year</span></p>
+          <div className="border-t pt-2 mt-2" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
             <p className="text-lg font-bold">
               Estimated Annual Value:{' '}
-              <span className="text-green-400">$42,600</span>
+              <span style={{ color: '#A0CFFF' }}>$42,600</span>
             </p>
           </div>
         </div>

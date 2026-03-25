@@ -16,19 +16,19 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0F172A]/95 backdrop-blur border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-white border-b" style={{ borderColor: '#D6DBE1', height: '64px' }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center group-hover:bg-blue-500 transition-colors">
+        <Link href="/" className="flex items-center gap-2 group shrink-0">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#0369EA' }}>
             <Shield className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-white text-sm sm:text-base">
-            Samsara <span className="text-blue-400">TrustLoop</span>
+          <span className="font-bold text-sm sm:text-base" style={{ color: '#00263E' }}>
+            Samsara <span style={{ color: '#0369EA' }}>· TrustLoop</span>
           </span>
         </Link>
 
-        {/* Nav */}
+        {/* Nav — desktop */}
         <nav className="hidden md:flex items-center gap-1">
           {navLinks.map(link => {
             const isActive = pathname === link.href;
@@ -36,11 +36,14 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+                className={`px-3 py-1.5 text-sm font-medium transition-all duration-200 relative ${
+                  isActive ? '' : ''
                 }`}
+                style={{
+                  color: isActive ? '#0369EA' : '#6B7280',
+                  borderBottom: isActive ? '2px solid #0369EA' : '2px solid transparent',
+                  paddingBottom: '6px',
+                }}
               >
                 {link.label}
               </Link>
@@ -48,29 +51,48 @@ export default function Header() {
           })}
         </nav>
 
-        {/* Live Demo badge */}
-        <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-3 py-1">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-          </span>
-          <span className="text-xs font-medium text-green-400">Live Demo</span>
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          {/* Live Demo badge */}
+          <div className="flex items-center gap-2 rounded-full px-3 py-1" style={{ backgroundColor: 'rgba(13,171,65,0.1)', border: '1px solid rgba(13,171,65,0.3)' }}>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <span className="text-xs font-medium" style={{ color: '#0DAB41' }}>Live Demo</span>
+          </div>
+
+          {/* CTA button */}
+          <Link
+            href="/manager"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-white rounded-full px-4 py-2 transition-all duration-200"
+            style={{ backgroundColor: '#0369EA' }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = '#0255C5';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = '#0369EA';
+            }}
+          >
+            View Dashboard →
+          </Link>
         </div>
       </div>
 
       {/* Mobile nav */}
-      <div className="md:hidden border-t border-slate-800 px-4 py-2 flex gap-1 overflow-x-auto">
+      <div className="md:hidden border-t px-4 py-2 flex gap-1 overflow-x-auto" style={{ borderColor: '#D6DBE1', backgroundColor: '#FFFFFF' }}>
         {navLinks.map(link => {
           const isActive = pathname === link.href;
           return (
             <Link
               key={link.href}
               href={link.href}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all duration-200 ${
-                isActive
-                  ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-              }`}
+              className="px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-all duration-200 rounded-full"
+              style={{
+                color: isActive ? '#0369EA' : '#6B7280',
+                backgroundColor: isActive ? '#F0F6FE' : 'transparent',
+                border: isActive ? '1px solid #0369EA' : '1px solid transparent',
+              }}
             >
               {link.label}
             </Link>

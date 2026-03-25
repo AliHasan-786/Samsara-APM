@@ -12,19 +12,40 @@ const eventIcons: Record<string, React.ElementType> = {
 };
 
 const confidenceColor = (score: number) => {
-  if (score < 60) return 'text-amber-400 bg-amber-500/15 border-amber-500/30';
-  if (score <= 75) return 'text-orange-400 bg-orange-500/15 border-orange-500/30';
-  return 'text-red-400 bg-red-500/15 border-red-500/30';
+  if (score < 60) return { bg: '#FFF8E7', text: '#B45309', border: '#FBB924' };
+  if (score <= 75) return { bg: '#FFF1F0', text: '#C2410C', border: '#FB923C' };
+  return { bg: '#FEF2F2', text: '#991B1B', border: '#FCA5A5' };
 };
 
 const statusBadge = (status: SafetyEvent['disputeStatus']) => {
   switch (status) {
     case 'pending':
-      return <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">Dispute Pending</span>;
+      return (
+        <span
+          className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+          style={{ backgroundColor: '#FFF8E7', color: '#B45309', border: '1px solid #FBB924' }}
+        >
+          Dispute Pending
+        </span>
+      );
     case 'approved':
-      return <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/30">Approved</span>;
+      return (
+        <span
+          className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+          style={{ backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #0DAB41' }}
+        >
+          Approved
+        </span>
+      );
     case 'rejected':
-      return <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30">Rejected</span>;
+      return (
+        <span
+          className="text-xs font-medium px-2.5 py-0.5 rounded-full"
+          style={{ backgroundColor: '#FEF2F2', color: '#991B1B', border: '1px solid #DF2036' }}
+        >
+          Rejected
+        </span>
+      );
     default:
       return null;
   }
@@ -53,40 +74,71 @@ export default function SafetyEventList({ events, onSelectEvent, driverFilter }:
   return (
     <div className="flex flex-col h-full">
       {/* App header */}
-      <div className="px-4 pt-4 pb-3 bg-[#0F172A] sticky top-0 z-10 border-b border-slate-800">
+      <div
+        className="px-4 pt-4 pb-3 sticky top-0 z-10 border-b"
+        style={{ backgroundColor: '#FFFFFF', borderColor: '#D6DBE1' }}
+      >
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold text-white">Safety Events</h1>
+          <h1 className="text-lg font-bold" style={{ color: '#00263E' }}>Safety Events</h1>
           {pendingCount > 0 && (
-            <div className="flex items-center gap-1.5 bg-red-500/15 border border-red-500/30 rounded-full px-2.5 py-1">
-              <Bell className="w-3 h-3 text-red-400" />
-              <span className="text-xs font-semibold text-red-400">{pendingCount}</span>
+            <div
+              className="flex items-center gap-1.5 rounded-full px-2.5 py-1"
+              style={{ backgroundColor: '#FEF2F2', border: '1px solid #FCA5A5' }}
+            >
+              <Bell className="w-3 h-3" style={{ color: '#991B1B' }} />
+              <span className="text-xs font-semibold" style={{ color: '#991B1B' }}>{pendingCount}</span>
             </div>
           )}
         </div>
-        <p className="text-xs text-slate-500 mt-1">Tap an event to review and dispute</p>
+        <p className="text-xs mt-1" style={{ color: '#6B7280' }}>Tap an event to review and dispute</p>
       </div>
 
       {/* List */}
-      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2">
+      <div className="flex-1 overflow-y-auto px-3 py-2 space-y-2" style={{ backgroundColor: '#F8FAFC' }}>
         {filtered.map(event => {
           const Icon = eventIcons[event.eventType] ?? AlertTriangle;
+          const confColors = confidenceColor(event.aiConfidenceScore);
           return (
             <button
               key={event.id}
               onClick={() => onSelectEvent(event)}
-              className="w-full bg-[#1E293B] border border-slate-700 hover:border-slate-600 rounded-xl p-3.5 flex items-start gap-3 text-left transition-all duration-150 active:scale-98"
+              className="w-full rounded-xl p-3.5 flex items-start gap-3 text-left transition-all duration-150 active:scale-98"
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #D6DBE1',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#0369EA';
+                (e.currentTarget as HTMLElement).style.backgroundColor = '#F0F6FE';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.borderColor = '#D6DBE1';
+                (e.currentTarget as HTMLElement).style.backgroundColor = '#FFFFFF';
+              }}
             >
-              <div className="w-9 h-9 rounded-lg bg-slate-800 flex items-center justify-center shrink-0 mt-0.5">
-                <Icon className="w-4 h-4 text-slate-400" />
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                style={{ backgroundColor: '#F0F6FE' }}
+              >
+                <Icon className="w-4 h-4" style={{ color: '#6B7280' }} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-sm font-semibold text-white truncate">AI Detected: {event.aiLabel}</span>
-                  <ChevronRight className="w-4 h-4 text-slate-600 shrink-0" />
+                  <span className="text-sm font-semibold truncate" style={{ color: '#333333' }}>
+                    AI Detected: {event.aiLabel}
+                  </span>
+                  <ChevronRight className="w-4 h-4 shrink-0" style={{ color: '#D6DBE1' }} />
                 </div>
-                <p className="text-xs text-slate-500 mb-2">{formatTime(event.timestamp)}</p>
+                <p className="text-xs mb-2" style={{ color: '#6B7280' }}>{formatTime(event.timestamp)}</p>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${confidenceColor(event.aiConfidenceScore)}`}>
+                  <span
+                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: confColors.bg,
+                      color: confColors.text,
+                      border: `1px solid ${confColors.border}`,
+                    }}
+                  >
                     {event.aiConfidenceScore}% confidence
                   </span>
                   {statusBadge(event.disputeStatus)}

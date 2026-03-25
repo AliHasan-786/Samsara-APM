@@ -10,9 +10,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: '#0F172A',
-        navyLight: '#1E293B',
-        navyMid: '#334155',
+        brand: {
+          blue: '#0369EA',
+          navy: '#00263E',
+          hero: '#101E2D',
+          accent: '#A0CFFF',
+          tint: '#F0F6FE',
+          teal: '#1DCAD3',
+        },
+        border: '#D6DBE1',
+        muted: '#6B7280',
       },
     },
   },
