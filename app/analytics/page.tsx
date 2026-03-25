@@ -1,0 +1,243 @@
+'use client';
+
+import { useDisputes } from '@/context/DisputeContext';
+import { DISPUTE_REASONS } from '@/lib/mockData';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
+  PieChart, Pie, Cell,
+  LineChart, Line, CartesianGrid,
+} from 'recharts';
+import { CheckCircle, AlertTriangle, TrendingUp, DollarSign, Users } from 'lucide-react';
+
+const COLORS = {
+  approved: '#22C55E',
+  rejected: '#EF4444',
+  pending: '#F59E0B',
+  blue: '#3B82F6',
+  indigo: '#6366F1',
+};
+
+// 7 days of mock chart data
+const dailyData = [
+  { day: 'Jan 9', approved: 2, rejected: 1, pending: 0 },
+  { day: 'Jan 10', approved: 1, rejected: 2, pending: 1 },
+  { day: 'Jan 11', approved: 3, rejected: 0, pending: 0 },
+  { day: 'Jan 12', approved: 1, rejected: 1, pending: 1 },
+  { day: 'Jan 13', approved: 2, rejected: 2, pending: 2 },
+  { day: 'Jan 14', approved: 3, rejected: 1, pending: 1 },
+  { day: 'Jan 15', approved: 1, rejected: 0, pending: 2 },
+];
+
+// Confidence distribution data (events cluster in 40-75% range)
+const confidenceData = [
+  { bucket: '0-20%', count: 1 },
+  { bucket: '20-40%', count: 3 },
+  { bucket: '40-60%', count: 8 },
+  { bucket: '60-75%', count: 11 },
+  { bucket: '75-90%', count: 4 },
+  { bucket: '90-100%', count: 2 },
+];
+
+const CustomTooltipDark = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#1E293B] border border-slate-700 rounded-lg p-3 text-xs shadow-xl">
+        <p className="text-slate-300 font-semibold mb-1">{label}</p>
+        {payload.map((p, i) => (
+          <p key={i} style={{ color: p.color }}>{p.name}: {p.value}</p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+export default function AnalyticsPage() {
+  const { events } = useDisputes();
+
+  const totalDisputed = events.filter(e => e.disputeStatus !== 'none').length;
+  const approvedCount = events.filter(e => e.disputeStatus === 'approved').length;
+  const pendingCount = events.filter(e => e.disputeStatus === 'pending').length;
+  const rejectedCount = events.filter(e => e.disputeStatus === 'rejected').length;
+  const approvalRate = totalDisputed > 0 ? Math.round((approvedCount / totalDisputed) * 100) : 0;
+  const retentionValue = approvedCount * 800; // simplified: each prevented false positive has value
+
+  // Pie data from reason codes
+  const reasonCounts: Record<string, number> = {};
+  events.forEach(e => {
+    if (e.disputeReasonCode) {
+      reasonCounts[e.disputeReasonCode] = (reasonCounts[e.disputeReasonCode] || 0) + 1;
+    }
+  });
+  const pieData = Object.entries(reasonCounts).map(([code, count]) => ({
+    name: DISPUTE_REASONS.find(r => r.code === code)?.label ?? code,
+    value: count,
+  }));
+  const PIE_COLORS = ['#3B82F6', '#6366F1', '#F59E0B', '#22C55E', '#EF4444', '#8B5CF6'];
+
+  const kpis = [
+    {
+      label: 'False Positives Prevented',
+      value: approvedCount,
+      icon: CheckCircle,
+      color: 'text-green-400',
+      bg: 'bg-green-500/10 border-green-500/20',
+      sub: 'Approved disputes',
+    },
+    {
+      label: 'Total Disputes Filed',
+      value: totalDisputed,
+      icon: AlertTriangle,
+      color: 'text-amber-400',
+      bg: 'bg-amber-500/10 border-amber-500/20',
+      sub: `${pendingCount} pending`,
+    },
+    {
+      label: 'Approval Rate',
+      value: `${approvalRate}%`,
+      icon: TrendingUp,
+      color: 'text-blue-400',
+      bg: 'bg-blue-500/10 border-blue-500/20',
+      sub: `${rejectedCount} sent to coaching`,
+    },
+    {
+      label: 'Driver Retention Value',
+      value: `$${(40000 + retentionValue).toLocaleString()}`,
+      icon: DollarSign,
+      color: 'text-indigo-400',
+      bg: 'bg-indigo-500/10 border-indigo-500/20',
+      sub: 'Estimated annual savings',
+    },
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-white mb-1">Trust Impact Analytics</h1>
+        <p className="text-slate-400 text-sm">How TrustLoop is improving data quality and driver retention</p>
+      </div>
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {kpis.map((kpi, i) => (
+          <div key={i} className={`rounded-xl border ${kpi.bg} p-5`}>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs text-slate-500 font-medium uppercase tracking-wider">{kpi.label}</span>
+              <kpi.icon className={`w-4 h-4 ${kpi.color}`} />
+            </div>
+            <p className={`text-3xl font-bold ${kpi.color} mb-1`}>{kpi.value}</p>
+            <p className="text-xs text-slate-500">{kpi.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Bar chart */}
+        <div className="lg:col-span-2 bg-[#1E293B] border border-slate-700 rounded-xl p-5">
+          <h2 className="font-bold text-white mb-1 text-base">Dispute Outcomes Over Time</h2>
+          <p className="text-xs text-slate-500 mb-4">7-day history of dispute resolutions</p>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={dailyData} barGap={2}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+              <XAxis dataKey="day" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltipDark />} />
+              <Legend wrapperStyle={{ fontSize: 12, color: '#94A3B8' }} />
+              <Bar dataKey="approved" fill={COLORS.approved} name="Approved" radius={[3,3,0,0]} />
+              <Bar dataKey="rejected" fill={COLORS.rejected} name="Rejected" radius={[3,3,0,0]} />
+              <Bar dataKey="pending" fill={COLORS.pending} name="Pending" radius={[3,3,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie chart */}
+        <div className="bg-[#1E293B] border border-slate-700 rounded-xl p-5">
+          <h2 className="font-bold text-white mb-1 text-base">Dispute Reasons</h2>
+          <p className="text-xs text-slate-500 mb-4">Breakdown by driver-reported cause</p>
+          {pieData.length > 0 ? (
+            <>
+              <ResponsiveContainer width="100%" height={160}>
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={45}
+                    outerRadius={70}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {pieData.map((_, index) => (
+                      <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomTooltipDark />} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="space-y-1.5 mt-2">
+                {pieData.map((item, i) => (
+                  <div key={i} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="text-slate-400">{item.name}</span>
+                    </div>
+                    <span className="text-slate-300 font-medium">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-40 text-slate-600 text-sm">
+              No disputes filed yet
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Line chart — confidence distribution */}
+      <div className="bg-[#1E293B] border border-slate-700 rounded-xl p-5 mb-8">
+        <h2 className="font-bold text-white mb-1 text-base">AI Confidence Score Distribution</h2>
+        <p className="text-xs text-slate-500 mb-4">
+          Disputed events cluster in the 40–75% &ldquo;gray zone&rdquo; — where AI is uncertain and drivers are most likely to be falsely flagged
+        </p>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={confidenceData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis dataKey="bucket" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} label={{ value: 'Events', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 11 }} />
+            <Tooltip content={<CustomTooltipDark />} />
+            <Line
+              type="monotone"
+              dataKey="count"
+              stroke={COLORS.indigo}
+              strokeWidth={2.5}
+              dot={{ fill: COLORS.indigo, r: 4 }}
+              name="Event Count"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* ROI Summary Card */}
+      <div className="bg-[#1E293B] border border-slate-700 rounded-xl overflow-hidden">
+        <div className="p-5 border-b border-slate-700 flex items-center gap-3">
+          <Users className="w-5 h-5 text-green-400" />
+          <h2 className="font-bold text-white text-base">ROI Summary — 500-Driver Fleet</h2>
+        </div>
+        <div className="p-5 font-mono text-sm space-y-1.5 text-slate-300">
+          <p>Fleet: <span className="text-white">500 drivers</span> | Turnover rate: <span className="text-white">90%</span> | Annual departures: <span className="text-white">450</span></p>
+          <p>If TrustLoop prevents 1% turnover reduction: <span className="text-green-400">5 drivers retained</span></p>
+          <p>Value per driver: <span className="text-white">$8,000</span> | Total saved: <span className="text-green-400">$40,000/year</span></p>
+          <p>Manager review time saved: <span className="text-white">52 hrs × $50/hr</span> = <span className="text-green-400">$2,600/year</span></p>
+          <div className="border-t border-slate-600 pt-2 mt-2">
+            <p className="text-lg font-bold">
+              Estimated Annual Value:{' '}
+              <span className="text-green-400">$42,600</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
