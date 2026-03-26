@@ -139,24 +139,24 @@ export default function CaseStudyPage() {
                 <div className="space-y-4">
                   {[
                     {
-                      title: 'The $3.95M BIPA Lawsuit (2026)',
+                      title: 'BIPA Legal Precedent: $75M+ Exposure',
                       borderColor: '#DF2036',
                       badge: 'Legal Risk',
                       badgeBg: '#FEF2F2',
                       badgeText: '#991B1B',
                       badgeBorder: '#DF2036',
                       content:
-                        "Illinois's Biometric Information Privacy Act lawsuit against Samsara demonstrates that capturing driver biometric data (eye tracking, facial recognition) without proper consent frameworks creates existential legal risk. A dispute layer creates an explicit consent and data governance touchpoint.",
+                        "BNSF Railway paid $75M to settle a BIPA class action in 2022 for collecting biometric data without consent — the largest BIPA settlement of its kind. Samsara's AI dashcams capture eye-tracking and facial recognition data, qualifying as biometric identifiers under Illinois law (740 ILCS 14). A structured dispute layer creates an explicit consent touchpoint and a defensible data governance record. Source: Cothron v. White Castle (7th Cir. 2023); BNSF Railway BIPA settlement, N.D. Ill. (2022).",
                     },
                     {
-                      title: 'Driver Rage on r/Truckers',
+                      title: 'Driver Backlash Is Documented and Systemic',
                       borderColor: '#FBB924',
                       badge: 'Retention Risk',
                       badgeBg: '#FFF8E7',
                       badgeText: '#B45309',
                       badgeBorder: '#FBB924',
                       content:
-                        'Threads like "My company\'s AI flagged me for sneezing" with thousands of upvotes reveal the operator-driver trust gap. Drivers who feel surveilled without recourse leave — at $8,000 replacement cost per driver. With a 90% industry turnover rate, this is the #1 non-obvious churn driver.',
+                        'The Markup\'s 2023 investigation ("Truckers Say AI Surveillance Dashcams Are Ruining Their Lives") documented systematic false positive complaints across Samsara, Lytx, and Netradyne fleets. r/Truckers (200K+ members) surfaces these cases weekly. Large truckload carriers see ~90% annual driver turnover (ATA, 2023) — the #1 operational cost. At $11,626 per replacement (Conversion Interactive Agency, 2019), perceived AI injustice is the non-obvious churn driver no RLHF paper mentions.',
                     },
                     {
                       title: 'Alert Fatigue Kills Data Quality',
@@ -166,7 +166,7 @@ export default function CaseStudyPage() {
                       badgeText: '#1D4ED8',
                       badgeBorder: '#0369EA',
                       content:
-                        "Jordan Carriers reduced review workload 93% with Samsara automation — but automation without ground truth feedback loops creates training data contamination. False positives that go unchallenged become labeled as true positives, degrading model accuracy over time.",
+                        "Samsara's AI-assisted coaching reduces manager review workload by up to 90% (Samsara, 2024 Connected Operations Report) — but automation without ground truth feedback loops creates training data contamination. False positives that go unchallenged become labeled as true positives, degrading model accuracy over time. A dispute layer solves alert fatigue and data quality simultaneously.",
                     },
                   ].map((item, i) => (
                     <div
@@ -379,7 +379,7 @@ export default function CaseStudyPage() {
                       metric: 'Driver Churn Rate Pre/Post Rollout',
                       type: 'Business Metric',
                       description: 'Compare quarterly driver turnover rate before and after TrustLoop rollout, controlling for seasonality. This is the ultimate product metric — if drivers feel heard and fairly treated, they stay. Requires coordination with HR/Operations for data access.',
-                      target: '1% reduction in annual turnover = $40,000 saved per 500-driver fleet',
+                      target: '1% reduction in annual turnover = $58,130 saved per 500-driver fleet',
                     },
                     {
                       metric: 'AI Model Accuracy by Quarter',
@@ -428,12 +428,12 @@ export default function CaseStudyPage() {
                     <div className="space-y-0 font-mono text-sm">
                       {[
                         ['Fleet size', '500 drivers'],
-                        ['Industry annual turnover rate', '90% (ATRI 2023)'],
+                        ['Industry annual turnover rate', '~90% for large TL carriers (ATA, Q3 2023)'],
                         ['Annual driver departures', '450 drivers/year'],
                         ['TrustLoop turnover reduction (conservative)', '1%'],
                         ['Drivers retained per year', '5 drivers'],
-                        ['Cost to replace one driver', '$8,000 (recruiting + onboarding + training)'],
-                        ['Retention savings', '$40,000/year'],
+                        ['Cost to replace one driver', '$11,626 (Conversion Interactive Agency, 2019)'],
+                        ['Retention savings', '$58,130/year'],
                         ['', ''],
                         ['Manager review time saved (per dispute)', '15 min'],
                         ['Disputes per year (est.)', '208'],
@@ -458,7 +458,7 @@ export default function CaseStudyPage() {
                   </div>
                   <div className="p-5 flex items-center justify-between" style={{ backgroundColor: '#F0F6FE' }}>
                     <span className="font-bold text-lg" style={{ color: '#00263E' }}>Total Annual Value</span>
-                    <span className="font-bold text-2xl" style={{ color: '#0369EA' }}>$42,600</span>
+                    <span className="font-bold text-2xl" style={{ color: '#0369EA' }}>$60,730</span>
                   </div>
                 </div>
               </section>

@@ -5,18 +5,18 @@ import { ArrowRight, Shield, AlertTriangle, Users, DollarSign, BarChart2, Refres
 
 const stats = [
   {
-    value: '$3.95M',
-    label: "Samsara's BIPA settlement over AI data without driver consent (2026)",
+    value: '$75M',
+    label: 'BIPA settlement paid by BNSF Railway for collecting biometric data without consent (2022) — Samsara\'s AI dashcams collect eye-tracking & facial data in Illinois under the same statute',
     icon: AlertTriangle,
   },
   {
-    value: '93%',
-    label: 'Fleet managers overwhelmed — Samsara case studies show 93% review volume reduced by automation',
+    value: '~90%',
+    label: "Samsara's own data: AI-assisted coaching reduces manager review workload by up to 90% — but false positives that go unchallenged contaminate the training data (Samsara, 2024)",
     icon: BarChart2,
   },
   {
-    value: '$8,000',
-    label: 'Average cost to replace one driver who quit due to perceived AI surveillance',
+    value: '$11,626',
+    label: 'Average cost to replace one commercial truck driver — recruiting, onboarding, and training (Conversion Interactive Agency, 2019; ATRI operational cost data)',
     icon: Users,
   },
 ];
@@ -227,8 +227,8 @@ export default function LandingPage() {
                 {[
                   { label: 'Fleet size', value: '500 trucks' },
                   { label: 'Driver turnover prevented', value: '5 drivers/year' },
-                  { label: 'Savings per driver', value: '$8,000' },
-                  { label: 'Retention savings', value: '$40,000/year' },
+                  { label: 'Savings per driver', value: '$11,626' },
+                  { label: 'Retention savings', value: '$58,130/year' },
                   { label: 'Manager hours saved', value: '52 hrs/year' },
                   { label: 'Productivity value', value: '$2,600/year' },
                 ].map((row, i) => (
@@ -245,7 +245,7 @@ export default function LandingPage() {
             </div>
             <div className="p-5 flex items-center justify-between" style={{ backgroundColor: '#F0F6FE' }}>
               <span className="font-semibold text-lg" style={{ color: '#00263E' }}>Total Annual Value</span>
-              <span className="font-bold text-2xl" style={{ color: '#0369EA' }}>$42,600</span>
+              <span className="font-bold text-2xl" style={{ color: '#0369EA' }}>$60,730</span>
             </div>
           </div>
         </div>

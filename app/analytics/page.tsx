@@ -111,7 +111,7 @@ export default function AnalyticsPage() {
     },
     {
       label: 'Driver Retention Value',
-      value: `$${(40000 + retentionValue).toLocaleString()}`,
+      value: `$${(58130 + retentionValue).toLocaleString()}`,
       icon: DollarSign,
       iconColor: '#1DCAD3',
       bg: '#F0FFFE',
@@ -250,14 +250,14 @@ export default function AnalyticsPage() {
           <h2 className="font-bold text-white text-base">ROI Summary — 500-Driver Fleet</h2>
         </div>
         <div className="p-5 font-mono text-sm space-y-1.5" style={{ color: '#A0CFFF' }}>
-          <p>Fleet: <span className="text-white">500 drivers</span> | Turnover rate: <span className="text-white">90%</span> | Annual departures: <span className="text-white">450</span></p>
+          <p>Fleet: <span className="text-white">500 drivers</span> | Turnover rate: <span className="text-white">~90% large TL carriers (ATA, 2023)</span> | Annual departures: <span className="text-white">450</span></p>
           <p>If TrustLoop prevents 1% turnover reduction: <span style={{ color: '#0DAB41' }}>5 drivers retained</span></p>
-          <p>Value per driver: <span className="text-white">$8,000</span> | Total saved: <span style={{ color: '#0DAB41' }}>$40,000/year</span></p>
+          <p>Value per driver: <span className="text-white">$11,626</span> <span style={{ color: '#6B7280', fontSize: '0.7em' }}>(Conversion Interactive Agency, 2019)</span> | Total saved: <span style={{ color: '#0DAB41' }}>$58,130/year</span></p>
           <p>Manager review time saved: <span className="text-white">52 hrs × $50/hr</span> = <span style={{ color: '#0DAB41' }}>$2,600/year</span></p>
           <div className="border-t pt-2 mt-2" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
             <p className="text-lg font-bold">
               Estimated Annual Value:{' '}
-              <span style={{ color: '#A0CFFF' }}>$42,600</span>
+              <span style={{ color: '#A0CFFF' }}>$60,730</span>
             </p>
           </div>
         </div>
