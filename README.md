@@ -1,6 +1,6 @@
 # Samsara TrustLoop — APM Portfolio Project
 
-**Live Demo:** [Deploy link here]
+**Live Demo:** [(https://samsara-apm.vercel.app/)]
 **Built by:** Ali Hasan · CS Senior · Spring 2026 · [LinkedIn](https://linkedin.com/in/alihasan-786)
 **Context:** Portfolio project built to demonstrate PM + engineering capability for Samsara's APM program
 
